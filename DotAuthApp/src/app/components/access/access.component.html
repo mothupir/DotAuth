@@ -1,1 +1,67 @@
-<p>access works!</p>
+<div class="container" *ngIf="organizationRegistered">
+    <div class="row between">
+        <div class="title">Manage Access</div>
+    </div>
+    <p-card>
+        <div class="row between">
+            <div class="title">Access Levels</div>
+            <div>
+                <div class="row content-center">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-unlock"></i>
+                        <input type="text" class="accesslevel" pInputText [(ngModel)]="accessLevel" placeholder="New Access Level">         
+                    </span>
+                    <button pButton class="p-button-outlined" label="Add Access Level" icon="pi pi-plus" iconPos="right"></button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="content" *ngIf="accessLevels.length == 0">
+            <div class="row evenly">
+                <div class="label-disabled">No Access Levels Added Yet.</div>
+            </div>
+            <div class="row content-center">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-unlock"></i>
+                    <input type="text" class="organization" pInputText [(ngModel)]="accessLevel" placeholder="New Access Level">         
+                </span>
+            </div>
+            <div class="row evenly mt-20">
+                <button pButton (click)="createAccessLevel()" label="Add Access Level" icon="pi pi-plus" iconPos="right"></button>
+            </div>
+        </div>
+        <div class="content"*ngIf="accessLevels.length > 0">
+            <div class="row between level" *ngFor="let level of accessLevels">
+                <div class="label">{{level}}</div>
+                <div>
+                    <button pButton (click)="removeAccessLevel(level)" class="p-button-text p-button-rounded p-button-warning" icon="pi pi-trash" iconPos="right" pTooltip="remove access level" tooltipPosition="bottom"></button>
+                    <button pButton (click)="getUsers(level)" class="p-button-text p-button-rounded p-button-info" icon="pi pi-users" iconPos="right" pTooltip="manage users" tooltipPosition="bottom"></button>
+                </div>
+            </div>
+        </div>
+    </p-card>
+</div>
+
+<div class="container" *ngIf="!organizationRegistered">
+    <div class="row between">
+        <div class="title">Register Organization</div>
+    </div>
+    <p-card>
+        <div class="row evenly">
+            <div class="label-disabled">Organization Not Found!</div>
+        </div>
+        <div class="row content-center">
+            <span class="p-input-icon-left">
+                <i class="pi pi-briefcase"></i>
+                <input type="text" class="organization" pInputText [(ngModel)]="organization" placeholder="Organization">         
+            </span>
+        </div>
+        <div class="row evenly mt-20">
+            <button pButton (click)="createOrganization()" label="Register Organization" icon="pi pi-pencil" iconPos="right"[disabled]="!(organization.length > 3)"></button>
+        </div>
+    </p-card>
+</div>
+
+<p-dialog header="Manage Users" [breakpoints]="{'960px': '75vw', '640px': '98vw'}" [(visible)]="showUsersDialog" [maximizable]="true" [closable]="true" [modal]="true" [draggable]="false" [style]="{width:'60vw'}">
+    Content
+</p-dialog>

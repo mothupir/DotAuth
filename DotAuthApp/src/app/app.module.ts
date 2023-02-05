@@ -1,28 +1,34 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonModule } from 'primeng/button';
+import { MenubarModule } from 'primeng/menubar';
+import { CardModule } from 'primeng/card';
+import { StepsModule } from 'primeng/steps';
+import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-import { MainComponent } from './pages/main/main.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { AccessComponent } from './components/access/access.component';
-import { AssignComponent } from './components/assign/assign.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    MainComponent,
-    ProfileComponent,
-    AccessComponent,
-    AssignComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    ButtonModule,
+    MenubarModule,
+    TooltipModule,
+    StepsModule,
+    CardModule
   ],
-  providers: [],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
