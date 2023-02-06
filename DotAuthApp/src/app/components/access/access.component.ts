@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ContractService } from 'src/app/services/contract/contract.service';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
@@ -24,7 +25,10 @@ export class AccessComponent {
     private contractService: ContractService,
     private confirmationService: ConfirmationService,
     private spinner: SpinnerService,
-    private messageService: MessageService) {}
+    private messageService: MessageService,
+    private title: Title) {
+      title.setTitle("Dot Auth | Organization")
+    }
 
   ngOnInit() {
     this.checkOrganization();
@@ -34,10 +38,17 @@ export class AccessComponent {
   async checkOrganization() {
     this.spinner.show();
     await this.contractService.isOrganizationRegistered().then(async (data: any) => {
+      console.log(data);
       this.organizationRegistered = data;
-      await this.getAccessLevels();
+      if(this.organizationRegistered) {
+        this.title.setTitle("Dot Auth | Access");
+        this.messageService.add({ severity: 'success', summary: 'Check Organization', detail: "Organization found..." });
+        await this.getAccessLevels();
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Check Organization', detail: "Organization not found..." });
+      }
     }).catch((e: any) => {
-      console.log(e);
+      this.messageService.add({ severity: 'error', summary: 'Check Organization', detail: `Error. Could not check organization. ${e}` });
     }).finally(() => {
       this.spinner.hide();
     })
@@ -149,8 +160,10 @@ export class AccessComponent {
     if(this.showUsersDialog) {
       this.showUsersDialog = false;
       this.accessLevel = "";
+      this.title.setTitle("Dot Auth | Access");
     } else {
       this.showUsersDialog = true;
+      this.title.setTitle("Dot Auth | Access | Users");
     }
   }
 }

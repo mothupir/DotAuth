@@ -5,11 +5,13 @@ import { HomeComponent } from './pages/home/home.component';
 const routes: Routes = [
   { 
     path: 'access',
-    loadChildren: () => import('./pages/main/main.module').then(module => module.MainModule)
+    loadChildren: () => import('./pages/main/main.module').then(module => module.MainModule),
+    title: 'Dot Auth | Access'
   },
   { 
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    title: 'Dot Auth | Home'
   }
 ];
 

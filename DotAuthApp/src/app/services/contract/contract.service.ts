@@ -13,7 +13,7 @@ export class ContractService {
   }
 
   async isOrganizationRegistered(): Promise<boolean> {
-    return true;
+    return false;
   }
 
   async createOrganization(name: string): Promise<void> {
