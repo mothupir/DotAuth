@@ -1,6 +1,6 @@
 @import url('node_modules/primeicons/primeicons.css');
 @import url('node_modules/font-awesome/css/font-awesome.min.css');
-@import url('../node_modules/primeng/resources/themes/vela-purple/theme.css');
+@import url('../node_modules/primeng/resources/themes/bootstrap4-light-purple/theme.css');
 @import url('node_modules/primeng/resources/primeng.min.css');
 
 * {
@@ -21,10 +21,6 @@ body {
 
 ::-webkit-scrollbar-thumb {
     background: var(--primary-color); 
-}
-
-hr {
-  border: 1px solid var(--surface-d);
 }
 
 .container {
@@ -147,4 +143,34 @@ hr {
       transform: scale(0.95);
       box-shadow: 0 0 0 0 rgba(51, 217, 178, 0);
     }
+}
+
+@media only screen and (min-width: 680px) {
+  .container {
+    margin: 10px 10vw;
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .container {
+    margin: 10px 15vw;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .container {
+    margin: 10px 20vw;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .container {
+    margin: 10px 24vw;
+  }
+}
+
+@media only screen and (min-width: 1720px) {
+  .container {
+    margin: 10px 26vw;
+  }
 }

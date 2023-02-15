@@ -1,18 +1,20 @@
-<p-menubar>
-    <ng-template pTemplate="start">
-        <div class="header" routerLink="/">
-            <img src="../../../assets/logo.png">
-            <div>Dot Auth</div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="end">
-        <div class="blobs">
-            <label for="address">{{organization}}</label>
-            <div *ngIf="!connected" pTooltip="Wallet Not Connected..." class="blob red"></div>
-            <div *ngIf="connected" pTooltip="Wallet Connected..." class="blob green"></div>
-        </div>
-    </ng-template>
-</p-menubar>
+<div class="container">
+    <p-menubar>
+        <ng-template pTemplate="start">
+            <div class="header" routerLink="/">
+                <img src="../../../assets/logo.png">
+                <div>Dot Auth</div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="blobs">
+                <label for="address">{{organization}}</label>
+                <div *ngIf="!connected" pTooltip="Wallet Not Connected..." class="blob red"></div>
+                <div *ngIf="connected" pTooltip="Wallet Connected..." class="blob green"></div>
+            </div>
+        </ng-template>
+    </p-menubar>
+</div>
 
 <router-outlet></router-outlet>
 

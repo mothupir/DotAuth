@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Organization, Rule } from 'src/app/models/models';
 import { ContractService } from 'src/app/services/contract/contract.service';
@@ -12,16 +11,18 @@ import { SpinnerService } from 'src/app/services/spinner/spinner.service';
 })
 export class AccessComponent {
   connected: boolean = false;
-  organization?: Organization;
+  organization!: Organization;
 
-  currentRule?: Rule;
+  currentRule: Rule;
   showUsersDialog: boolean = false;
 
   constructor(
     private contractService: ContractService,
     private confirmationService: ConfirmationService,
     private spinner: SpinnerService,
-    private messageService: MessageService) {}
+    private messageService: MessageService) {
+      this.currentRule = new Rule();
+    }
 
   ngOnInit() {
     this.getOrganization();
@@ -174,7 +175,7 @@ export class AccessComponent {
   }
 
   setRule(uuid: string) {
-    this.currentRule = this.organization?.rules.find(r => r.uuid == uuid);
+    this.currentRule = this.organization?.rules.find(r => r.uuid == uuid) || new Rule();
   }
 
   toggleUserDialog(uuid: string) {
