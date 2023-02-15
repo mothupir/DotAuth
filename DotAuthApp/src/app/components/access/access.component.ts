@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Organization, Rule } from 'src/app/models/models';
 import { ContractService } from 'src/app/services/contract/contract.service';
 import { SpinnerService } from 'src/app/services/spinner/spinner.service';
 
@@ -10,160 +11,178 @@ import { SpinnerService } from 'src/app/services/spinner/spinner.service';
   styleUrls: ['./access.component.css']
 })
 export class AccessComponent {
-  organizationRegistered: boolean = false;
-  organization: string = "";
+  connected: boolean = false;
+  organization?: Organization;
 
-  accessLevels: string[] = [];
-  accessLevel: string = "";
-
-  users: {[key: string]: string}[] = [];
-  userName: string = "";
-  userAddress: string = "";
+  currentRule?: Rule;
   showUsersDialog: boolean = false;
 
   constructor(
     private contractService: ContractService,
     private confirmationService: ConfirmationService,
     private spinner: SpinnerService,
-    private messageService: MessageService,
-    private title: Title) {
-      title.setTitle("Dot Auth | Organization")
-    }
+    private messageService: MessageService) {}
 
   ngOnInit() {
-    this.checkOrganization();
+    this.getOrganization();
   }
 
   // ------------ Organization Management ------------
-  async checkOrganization() {
+  async getOrganization() {
     this.spinner.show();
-    await this.contractService.isOrganizationRegistered().then(async (data: any) => {
-      console.log(data);
-      this.organizationRegistered = data;
-      if(this.organizationRegistered) {
-        this.title.setTitle("Dot Auth | Access");
-        this.messageService.add({ severity: 'success', summary: 'Check Organization', detail: "Organization found..." });
-        await this.getAccessLevels();
-      } else {
-        this.messageService.add({ severity: 'warn', summary: 'Check Organization', detail: "Organization not found..." });
-      }
+    await this.contractService.getOrganization().then(async (data: any) => {
+      this.messageService.add({ 
+        severity: 'success', 
+        summary: 'Organization', 
+        detail: "Connected to organization..." 
+      });
+      this.connected = true;
+      this.organization = data;
     }).catch((e: any) => {
-      this.messageService.add({ severity: 'error', summary: 'Check Organization', detail: `Error. Could not check organization. ${e}` });
+      this.messageService.add({ 
+        severity: 'warn', 
+        summary: 'Not Found!', 
+        detail: 'Organization not found...' 
+      });
     }).finally(() => {
       this.spinner.hide();
     })
   }
 
-  async createOrganization() {
-    this.spinner.show();
-    await this.contractService.createOrganization(this.organization).then(async () => {
-      await this.checkOrganization();
-      this.organization = "";
-    }).catch((e: any) => {
-      this.messageService.add({ severity: 'error', summary: 'Create Organization', detail: `Error. Could not create organization. ${e}` });
-      console.log(e);
-    }).finally(() => {
-      this.spinner.hide();
-    })
+  addOrganization(name: string) {
+    this.confirmationService.confirm({
+      header: 'Register Organization',
+      message: 'Are you sure you want to register an organization?',
+      accept: async () => {
+        this.spinner.show();
+        await this.contractService.addOrganization(name).then(async () => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Create Organization', 
+            detail: 'Organization registered, wait for your wallet to confirm the transaction and then refresh the page to see your Organization.' });
+        }).catch((e: any) => {
+          this.messageService.add({ 
+            severity: 'warn', 
+            summary: 'Create Organization', 
+            detail: 'Organization already exists...' 
+          });
+        }).finally(() => {
+          this.spinner.hide();
+        });
+      }
+    });
   }
 
   // ------------ Access Level Management ------------
-  async getAccessLevels() {
-    this.spinner.show();
-    await this.contractService.getAccessLevels().then((data: any) => {
-      this.accessLevels = data;
-    }).catch((e: any) => {
-      this.messageService.add({ severity: 'error', summary: 'Load Access Levels', detail: `Error. Could not load Access Levels. ${e}` });
-    }).finally(() => {
-      this.spinner.hide();
-    });
-  }
-
-  async addAccessLevel() {
-    this.spinner.show();
-    await this.contractService.addAccessLevel(this.accessLevel).then(async () => {
-      await this.getAccessLevels();
-      this.messageService.add({ severity: 'success', summary: 'Add Access Level', detail: `Access Level, ${this.accessLevel} added successfully...` });
-      this.accessLevel = "";
-    }).catch((e: any) => {
-      this.messageService.add({ severity: 'error', summary: 'Add Access Level', detail: `Access Level, ${this.accessLevel} could not be added. ${e}` });
-    }).finally(() => {
-      this.spinner.hide();
-    });
-  }
-
-  removeAccessLevel(accessLevel: string) {
+  addRule(name: string) {
     this.confirmationService.confirm({
-      header: "Remove Access Level",
-      message: `Are you sure that you want to remove Access Level, ${accessLevel}?`,
+      header: 'Add Access Rule',
+      message: 'Are you sure you want to add the access rule?',
       accept: async () => {
         this.spinner.show();
-        await this.contractService.removeAccessLevel(accessLevel).then(async () => {
-          await this.getAccessLevels();
-          this.messageService.add({ severity: 'success', summary: 'Remove Access Level', detail: `Access Level, ${accessLevel} removed successfully...` });
-        }).catch((e: any) => {
-          this.messageService.add({ severity: 'error', summary: 'Remove Access Level', detail: `Access Level, ${accessLevel} could not be removed.` });
-        }).finally(async () => {
+        await this.contractService.addRule(name).then(() => {
+          this.messageService.add({
+            severity: 'success', 
+            summary: 'Add Access Rule', 
+            detail: 'Access Rule was added successfully, wait for your wallet to confirm the transaction and then refresh the page to see your new Access Rule.'
+          });
+        }).catch(() => {
+          this.messageService.add({
+            severity: 'warn', 
+            summary: 'Add Access Rule', 
+            detail: 'Access Rule could not be added.'
+          });
+        }).finally(() => {
           this.spinner.hide();
         });
       }
     });
+  }
+
+  removeRule(uuid: string, index: number) {
+    this.confirmationService.confirm({
+      header: "Remove Access Rule",
+      message: "Are you sure you want to remove the Access Rule?",
+      accept: async () => {
+        this.spinner.show();
+        await this.contractService.removeRule(uuid, index).then(() => {
+          this.messageService.add({
+            severity: 'success', 
+            summary: 'Remove Access Rule', 
+            detail: 'Access Rule was removed successfully, wait for your wallet to confirm the transaction and then refresh the page.'
+          });
+        }).catch(() => {
+          this.messageService.add({
+            severity: 'warn', 
+            summary: 'Remove Access Rule', 
+            detail: 'Access Rule could not be removed.'
+          });
+        }).finally(() => {
+          this.spinner.hide();
+        });
+      }
+    });
+  }
+
+  activeRules(rules: Rule[]) {
+    return rules.filter(r => r.active).length;
   }
 
   // ------------ User Management ------------
-  async getUsers(level: string) {
-    this.spinner.show();
-    await this.contractService.getUsers(level).then((data: any) => {
-      this.users = data;
-      this.accessLevel = level;
-    }).catch((e: any) => {
-      this.messageService.add({ severity: 'error', summary: 'Get Users', detail: "Error. Could not load users." });
-    }).finally(() => {
-      this.toggleUserDialog();
-      this.spinner.hide();
-    });
-  }
-
-  async addUser() {
-    this.spinner.show();
-    await this.contractService.addUser(this.userAddress, this.userName).then(async () => {
-      await this.getUsers(this.accessLevel);
-      this.messageService.add({ severity: 'success', summary: 'Add User', detail: `User, ${this.userName} added successfully...` });
-      }).catch((e: any) => {
-        this.messageService.add({ severity: 'error', summary: 'Add User', detail: `User, ${this.userName} could not be added. ${e}` });
-    }).finally(() => {
-      this.userAddress = "";
-      this.userName = "";
-      this.spinner.hide();
-    });
-  }
-
-  async removeUser(address: string, name: string) {
+  addUser(address: string, name: string, uuid: string, index: number) {
     this.confirmationService.confirm({
-      header: "Remove User",
-      message: `Are you sure that you want to remove User, ${name}?`,
+      header: "Add New User",
+      message: "Are you sure you want to add this user?",
       accept: async () => {
         this.spinner.show();
-        await this.contractService.removeUser(address).then(async () => {
-          await this.getUsers(this.accessLevel);
-          this.messageService.add({ severity: 'success', summary: 'Remove User', detail: `User, ${name} removed successfully...` });
-        }).catch((e: any) => {
-          this.messageService.add({ severity: 'error', summary: 'Remove User', detail: `User, ${name} could not be removed. ${e}` });
-        }).finally(async () => {
+        this.contractService.addUser(address, name, uuid, index).then(() => {
+          this.messageService.add({
+            severity: 'success', 
+            summary: 'Add User', 
+            detail: 'User added successfully, wait for your wallet to confirm the transaction and then refresh the page.'
+          });
+        }).catch(() => {
+          this.messageService.add({
+            severity: 'warn', 
+            summary: 'Add User', 
+            detail: 'Could not add User.'
+          });
+        }).finally(() => {
           this.spinner.hide();
         });
       }
     });
   }
 
-  toggleUserDialog() {
+  async assign(uuid: string, ruleIndex: number, userIndex: number) {
+    this.spinner.show();
+    await this.contractService.assign(uuid, ruleIndex, userIndex).then(() => {
+      this.messageService.add({
+        severity: 'success', 
+        summary: 'Revoke/Assign Access', 
+        detail: 'Access revoked/assigned successfully, wait for your wallet to confirm the transaction and then refresh the page.'
+      });
+    }).catch(() => {
+      this.messageService.add({
+        severity: 'warn', 
+        summary: 'Revoke/Assign Access', 
+        detail: 'Could not revoke/assign access.'
+      });
+    }).finally(() => {
+      this.spinner.hide();
+    })
+  }
+
+  setRule(uuid: string) {
+    this.currentRule = this.organization?.rules.find(r => r.uuid == uuid);
+  }
+
+  toggleUserDialog(uuid: string) {
+    this.setRule(uuid);
     if(this.showUsersDialog) {
       this.showUsersDialog = false;
-      this.accessLevel = "";
-      this.title.setTitle("Dot Auth | Access");
     } else {
       this.showUsersDialog = true;
-      this.title.setTitle("Dot Auth | Access | Users");
     }
   }
 }

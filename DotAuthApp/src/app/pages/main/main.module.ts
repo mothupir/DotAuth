@@ -14,15 +14,13 @@ import { ToastModule } from 'primeng/toast';
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 import { AccessComponent } from 'src/app/components/access/access.component';
-import { AssignComponent } from 'src/app/components/assign/assign.component';
 import { CommonModule } from '@angular/common';
 
 
 @NgModule({
   declarations: [
     MainComponent,
-    AccessComponent,
-    AssignComponent
+    AccessComponent
   ],
   imports: [
     CommonModule,

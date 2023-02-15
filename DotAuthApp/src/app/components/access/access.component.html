@@ -1,139 +1,94 @@
-<div class="container" *ngIf="!organizationRegistered">
-    <div class="row between">
-        <div class="title">Manage Organization</div>
-    </div>
-
-    <p-card>
-        <div class="row evenly">
-            <div class="label-disabled">Organization Not Found!</div>
-        </div>
-
-        <div class="row content-center">
-            <span class="p-input-icon-left">
-                <i class="pi pi-briefcase"></i>
-                <input type="text" class="organization" pInputText [(ngModel)]="organization" placeholder="Organization">         
-            </span>
-        </div>
-
-        <div class="row evenly mt-20">
-            <button pButton (click)="createOrganization()" label="Register Organization" icon="pi pi-pencil" iconPos="right"[disabled]="!(organization.length > 3)"></button>
-        </div>
-    </p-card>
-</div>
-
-<div class="container" *ngIf="organizationRegistered">
+<div class="container" *ngIf="organization">
     <div class="row between">
         <div class="title">Manage Access</div>
     </div>
 
     <p-card>
         <div class="row between">
-            <div class="title">Access Levels</div>
+            <div class="title">Access Rules <i style="font-weight: 300; font-size: small;">({{activeRules(organization!.rules)}} active rules)</i></div>
 
             <div>
                 <div class="row content-center">
                     <span class="p-input-icon-left">
                         <i class="pi pi-unlock"></i>
-                        <input type="text" class="accesslevel" pInputText [(ngModel)]="accessLevel" placeholder="New Access Level">         
+                        <input type="text" #rule class="accesslevel" pInputText placeholder="New Access Rule">         
                     </span>
 
-                    <button pButton class="p-button-outlined" label="Add Access Level" icon="pi pi-plus" iconPos="right" [disabled]="accessLevel.length < 3"></button>
+                    <button pButton (click)="addRule(rule.value)" class="p-button-outlined p-button-raised" label="New Rule" icon="pi pi-plus" iconPos="right" [disabled]="rule.value.length < 3"></button>
                 </div>
             </div>
         </div>
 
         <hr>
 
-        <div class="content" *ngIf="accessLevels.length == 0">
-            <div class="row evenly">
-                <div class="label-disabled">No Access Levels Added Yet.</div>
-            </div>
-
-            <div class="row content-center">
-                <span class="p-input-icon-left">
-                    <i class="pi pi-unlock"></i>
-                    <input type="text" class="organization" pInputText [(ngModel)]="accessLevel" placeholder="New Access Level">         
-                </span>
-            </div>
-
-            <div class="row evenly mt-20">
-                <button pButton (click)="addAccessLevel()" label="Add Access Level" icon="pi pi-plus" iconPos="right"[disabled]="accessLevel.length < 3"></button>
-            </div>
-        </div>
-
-        <div class="content"*ngIf="accessLevels.length > 0">
-            <div class="row between level" *ngFor="let level of accessLevels">
-                <div class="label">{{level}}</div>
+        <div *ngFor="let rule of organization!.rules">
+            <div *ngIf="rule.active" class="row between level mb-10">
+                <div class="label">{{rule.name}} <i style="font-weight: 300; font-size: small;">({{rule.users.length}} users)</i></div>
 
                 <div>
-                    <button pButton (click)="removeAccessLevel(level)" class="p-button-text p-button-rounded p-button-warning" icon="pi pi-trash" iconPos="right" pTooltip="remove access level" tooltipPosition="bottom"></button>
-                    <button pButton (click)="getUsers(level)" class="p-button-text p-button-rounded p-button-info" icon="pi pi-users" iconPos="right" pTooltip="manage users" tooltipPosition="bottom"></button>
+                    <button pButton (click)="removeRule(rule.uuid, rule.index)" class="p-button-text p-button-rounded p-button-warning" icon="pi pi-trash" iconPos="right" pTooltip="remove access level" tooltipPosition="bottom"></button>
+                    <button pButton (click)="toggleUserDialog(rule.uuid)" class="p-button-text p-button-rounded p-button-info" icon="pi pi-users" iconPos="right" pTooltip="manage users" tooltipPosition="bottom"></button>
                 </div>
             </div>
         </div>
     </p-card>
 </div>
 
-<p-dialog [breakpoints]="{'960px': '80vw', '640px': '95vw'}" [(visible)]="showUsersDialog" [maximizable]="true" [closable]="false" [modal]="true" [draggable]="false" [style]="{width:'40vw'}">
+<p-dialog [breakpoints]="{'960px': '80vw', '640px': '95vw'}" [(visible)]="showUsersDialog" [maximizable]="true" [modal]="true" [draggable]="false" [style]="{width:'40vw'}">
     <ng-template pTemplate="header">
-        <div class="title">Manage Users</div>
+        <div class="title">Manage Users <i>({{currentRule ? currentRule.users.length : 0}})</i></div>
     </ng-template>
 
-    <div class="row between">
-        <div class="title">User</div>
-
-        <div class="row content-center">
-            <span class="p-input-icon-left">
+    <div *ngIf="currentRule">
+        <div class="row between gap-10">
+            <span class="p-input-icon-left" style="width: 100%;">
                 <i class="pi pi-user"></i>
-                <input type="text" pInputText [(ngModel)]="userName" placeholder="Name">         
+                <input type="text" #name pInputText placeholder="Name" style="width: 100%;">         
             </span>
-
-            <span class="p-input-icon-left">
+    
+            <span class="p-input-icon-left" style="width: 100%;">
                 <i class="pi pi-hashtag"></i>
-                <input type="text" pInputText [(ngModel)]="userAddress" placeholder="Address">         
+                <input type="text" #address pInputText placeholder="Address" style="width: 100%;">         
             </span>
-
-            <button pButton class="p-button-outlined" pTooltip="Add User" icon="pi pi-plus" iconPos="right" [disabled]="userName.length < 3 || userAddress.length < 3"></button>
+    
+            <button pButton (click)="addUser(address.value, name.value, currentRule!.uuid, currentRule!.index)" class="p-button-outlined p-button-raised" label="Add New User" icon="pi pi-user-plus" iconPos="right" [disabled]="name.value.length < 3 || address.value.length < 3" style="width: 100%;"></button>
+        </div>
+    
+        <hr>
+    
+        <div class="content" *ngIf="currentRule!.users.length == 0">
+            <div class="row evenly">
+                <div class="label-disabled">No Users Added Yet.</div>
+            </div>
+        </div>
+        
+        <div class="content"*ngIf="currentRule!.users.length > 0">
+            <div class="row between level" *ngFor="let user of currentRule!.users">
+                <div class="label" [pTooltip]="user.owner" tooltipPosition="bottom">{{ user.name }} <i style="font-weight: 300; font-size: small;">({{user.active ? "active" : "inactive"}})</i></div>
+                
+                <div>
+                    <button pButton *ngIf="user.active" (click)="assign(currentRule!.uuid, currentRule!.index, user.index)" class="p-button-text p-button-rounded p-button-warning" icon="pi pi-sign-out" iconPos="right" pTooltip="revoke access" tooltipPosition="bottom"></button>
+                    <button pButton *ngIf="!user.active" (click)="assign(currentRule!.uuid, currentRule!.index, user.index)" class="p-button-text p-button-rounded p-button-info" icon="pi pi-sign-in" iconPos="right" pTooltip="assign access" tooltipPosition="bottom"></button>
+                </div>
+            </div>
         </div>
     </div>
+</p-dialog>
 
-    <hr>
-
-    <div class="content" *ngIf="users.length == 0">
-        <div class="row evenly">
-            <div class="label-disabled">No Users Added Yet.</div>
-        </div>
-
+<p-dialog [breakpoints]="{'960px': '60vw', '640px': '80vw', '480px': '90vw'}" [(visible)]="!connected" [closable]="false" [modal]="true" [draggable]="false" [style]="{width:'40vw'}">
+    <ng-template pTemplate="header">
+        <div class="title">New Organization</div>
+    </ng-template>
+    <div>
         <div class="row content-center">
             <span class="p-input-icon-left">
-                <i class="pi pi-user"></i>
-                <input type="text" pInputText [(ngModel)]="userName" placeholder="Name">         
-            </span>
-        </div>
-
-        <div class="row content-center">
-            <span class="p-input-icon-left">
-                <i class="pi pi-hashtag"></i>
-                <input type="text" pInputText [(ngModel)]="userAddress" placeholder="Address">         
+                <i class="pi pi-briefcase"></i>
+                <input type="text" #org class="organization" pInputText [(ngModel)]="organization" placeholder="Organization">         
             </span>
         </div>
 
         <div class="row evenly mt-20">
-            <button pButton (click)="addUser()" label="Add Access Level" icon="pi pi-plus" iconPos="right"[disabled]="userAddress.length < 3"></button>
+            <button pButton (click)="addOrganization(org.value)" class="p-button-outlined p-button-raised" label="Register Organization" icon="pi pi-pencil" iconPos="right"[disabled]="!(org.value.length > 3)"></button>
         </div>
     </div>
-    
-    <div class="content"*ngIf="users.length > 0">
-        <div class="row between level" *ngFor="let user of users">
-            <div class="label" [pTooltip]="user.address" tooltipPosition="bottom">{{ user.name }}</div>
-            
-            <div>
-                <button pButton (click)="removeUser(user.address, user.name)" class="p-button-text p-button-rounded p-button-warning" icon="pi pi-trash" iconPos="right" pTooltip="remove access level" tooltipPosition="bottom"></button>
-            </div>
-        </div>
-    </div>
-
-    <ng-template pTemplate="footer">
-        <button pButton (click)="toggleUserDialog()" label="Close" class="p-button-secondary" icon="pi pi-times" iconPos="right"></button>
-    </ng-template>
 </p-dialog>
