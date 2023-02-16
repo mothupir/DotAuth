@@ -1,1 +1,32 @@
+<p-menubar>
+  <ng-template pTemplate="start">
+    <div class="title">Dot Auth Test Web</div>
+  </ng-template>
+  
+  <ng-template pTemplate="end">
+    <div *ngIf="!authorized">
+      <span class="p-input-icon-left" style="margin-right: 10px;">
+        <i class="pi pi-at"></i>
+        <input type="text" #address class="accesslevel" pInputText placeholder="Organizaton Address" pTooltip="Organization Address or empty if you are the organization" style="width: 100%;">         
+      </span>
+
+      <button pButton (click)="authorize(address.value)" label="Authorize" icon="pi pi-sign-in" iconPos="right"></button>
+    </div>
+
+    <button pButton *ngIf="authorized" label="Access Granted" icon="pi pi-check" class="p-button-success" iconPos="right"></button>
+  </ng-template>
+</p-menubar>
+
 <router-outlet></router-outlet>
+
+<p-dialog [modal]="true" [style]="{'width': '40vw'}" [(visible)]="dispalyAccessDenied">
+  <ng-template pTemplate="header">
+    <div class="header">
+      <div>Access Denied</div>
+      <i class="pi pi-exclamation-circle"></i>
+    </div>
+  </ng-template>
+  <div class="content">
+    You do not have access to this system, please consult with the system administrator.
+  </div>
+</p-dialog>

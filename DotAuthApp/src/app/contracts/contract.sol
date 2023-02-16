@@ -91,19 +91,15 @@ contract DotAuth {
         return true;
     }
 
-    function allow(address _org, string memory _uuid) external view returns(bool) {
-        require(orgExists(_org), "organization does not exist");
-        require(ruleExists(_uuid), "access rule does not exist");
+    function authorize(address _org) external view returns(bool) {
         if(organizationsMapping[_org].owner != _org) {
             return false;
         }
 
         for(uint256 i; i < organizationsMapping[_org].rules.length; i++) {
-            if(keccak256(abi.encodePacked(organizationsMapping[_org].rules[i].uuid)) == keccak256(abi.encodePacked(_uuid))) {
-                for(uint256 j; j < organizationsMapping[_org].rules[i].users.length; j++) {
-                    if(organizationsMapping[_org].rules[i].users[j].owner == msg.sender) {
-                        return true;
-                    }
+            for(uint256 j; j < organizationsMapping[_org].rules[i].users.length; j++) {
+                if((organizationsMapping[_org].rules[i].users[j].owner == msg.sender) && organizationsMapping[_org].rules[i].users[j].active) {
+                    return true;
                 }
             }
         }
