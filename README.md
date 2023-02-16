@@ -65,7 +65,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://path to the screenshot)
 
 DotAuth is an Identity and Access Management platform for businesses built on the Filecoin Ethereum Virtual Machine. Our solution makes it easier to manage access to proprietary systems and software. The current MVP allows organizations to create access rules and assign them to users. Our plan is to incorporate an AuthWallet in the next iteration to provide users with a secure way to store all their access tokens.
 
@@ -155,9 +154,7 @@ Below is an example of how you can start installing and setting up the app local
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-[![LIVE-DEMO-SITE](deployed-site-here)](deployed-site-here)
-
-[![DEMO](DotAuthApp/src/assets/favicon.png)](https://youtu.be/mtcGJLqD41M)
+Demo video: [https://youtu.be/mtcGJLqD41M](https://youtu.be/mtcGJLqD41M)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -235,7 +232,7 @@ Use this space to list resources you find helpful and would like to give credit 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/mothupir/DotAuth.svg?style=for-the-badge
-[contributors-url]: https://github.com/mothupir/DotAuth/
+[contributors-url]: https://github.com/mothupir/DotAuth//graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/mothupir/DotAuth.svg?style=for-the-badge
 [forks-url]: https://github.com/mothupir/DotAuth/network/members
 [stars-shield]: https://img.shields.io/github/stars/mothupir/DotAuth.svg?style=for-the-badge
@@ -246,7 +243,6 @@ Use this space to list resources you find helpful and would like to give credit 
 [license-url]: https://github.com/mothupir/DotAuth/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/mothupi-ramogayana-68849480/
-[product-screenshot]: images/screenshot.png
 [moonbeam.network]: https://img.shields.io/badge/moonbeam-000000?style=for-the-badge&logo=remixethereum&logoColor=white
 [Moonbeam-url]: https://docs.moonbeam.network/
 [remix.ethereum.org]: https://img.shields.io/badge/remix-000000?style=for-the-badge&logo=remixethereum&logoColor=white
