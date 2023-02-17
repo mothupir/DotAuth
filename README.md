@@ -66,7 +66,7 @@
 ## About The Project
 
 
-DotAuth is an Identity and Access Management platform for businesses built on the Filecoin Ethereum Virtual Machine. Our solution makes it easier to manage access to proprietary systems and software. The current MVP allows organizations to create access rules and assign them to users. Our plan is to incorporate an AuthWallet in the next iteration to provide users with a secure way to store all their access tokens.
+DotAuth is an Identity and Access Management platform for businesses built on the Moonbeam Blockchain. Our solution makes it easier to manage access to proprietary systems and software. The current MVP allows organizations to create access rules and assign them to users. Our plan is to incorporate an AuthWallet in the next iteration to provide users with a secure way to store all their access tokens.
 
 Here's why:
 
@@ -178,6 +178,8 @@ Below is an example of how you can start installing and setting up the app local
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+Demo Live Link: [https://dotauth.web.app/](https://dotauth.web.app/)
+Test Demo Link: [https://dotauthtestweb.web.app/](https://dotauthtestweb.web.app/)
 Demo video: [https://youtu.be/mtcGJLqD41M](https://youtu.be/mtcGJLqD41M)
 Docker Image: [mothupir/dotauth](https://hub.docker.com/repository/docker/mothupir/dotauth/tags?page=1&ordering=last_updated)
 
@@ -232,7 +234,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Discord - [@mothupir#2900](https://discord.com/channels/@mmothupir#2900)
+Discord - [@mothupir#2900](https://discord.com/channels/@mothupir#2900)
 
 Project Link: [https://github.com/mothupir/DotAuth](https://github.com/mothupir/DotAuth)
 
