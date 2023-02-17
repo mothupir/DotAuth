@@ -125,36 +125,61 @@ This is an example of how to list things you need to use the software and how to
 
 Below is an example of how you can start installing and setting up the app locally.
 
-* A prebuilt docker image is readily available in the Docker-Image folder which you can run with the Docker command.
-
+- A prebuilt docker image is readily available in the Docker-Image folder which you can run with the Docker command.
+1. Run DotAuth Image
+   ```
+    $docker pull mothupir/dotauth:latest
+   ```
+    ```sh 
+    $docker run -d -p <your-port>:80 mothupir/dotauth:latest
+    ```
+2. Run DotAuthTestWeb Image
+    ```sh 
+    $docker pull mothupir/dotauth:testweb
+   ```
+    ```sh 
+    $docker run -d -p <your-port>:81 mothupir/dotauth:testweb
+    ```
 * Alternatively follow below:
 
 1. Clone the repo
    ```sh
    git clone https://github.com/mothupir/DotAuth.git
    ```
-3. cd into repo
+2. cd into repo
    ```sh
    cd  DotAuth
    ```
-4. Build with docker
+3. NPM Install
    ```sh
-   $docker build -t <name-of-image> .
+   $npm install
    ```
-5. Run with docker
+4. Run
    ```sh
-   $docker run -d -p <your-port>:80 <name-of-image>
+   ng serve -o
    ```
-6. Open your browser at the specified port.
+5. Run Test Web
+   ```sh
+   cd ..
+   ```
+   ```sh
+   cd DotAuthTestWeb
+   ```
+   ```sh
+   npm install
+   ```
+   ```sh
+   ng serve -o
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
 Demo video: [https://youtu.be/mtcGJLqD41M](https://youtu.be/mtcGJLqD41M)
+Docker Image: [mothupir/dotauth](https://hub.docker.com/repository/docker/mothupir/dotauth/tags?page=1&ordering=last_updated)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
