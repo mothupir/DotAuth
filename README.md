@@ -66,7 +66,7 @@
 ## About The Project
 
 
-DotAuth is an Identity and Access Management platform for businesses built on the Moonbeam Blockchain. Our solution makes it easier to manage access to proprietary systems and software. The current MVP allows organizations to create access rules and assign them to users. Our plan is to incorporate an AuthWallet in the next iteration to provide users with a secure way to store all their access tokens.
+DotAuth is an Identity and Access Management platform for businesses built on the Moonbeam EVM Blockchain. Our solution makes it easier to manage access to proprietary systems and software. The current MVP allows organizations to create access rules and assign them to users. Our plan is to incorporate an AuthWallet in the next iteration to provide users with a secure way to store all their access tokens.
 
 Here's why:
 
